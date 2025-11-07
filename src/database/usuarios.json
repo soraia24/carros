@@ -16,6 +16,15 @@
       "cel": "84999998888",
       "senha": "$2b$10$eQF6peuow3A1MiNlhFi3D.3gjy6dtmnjx0I1qYX4YirhD6KXvfrSi",
       "role": "admin"
+    },
+    {
+      "id": 3,
+      "login": "sarah.f",
+      "nome": "sarah",
+      "email": "sasa@gmail.com",
+      "cel": "84988766009",
+      "senha": "$2b$10$i2198noUqTwYIFDQU.4ZN.A.ySeg8lediElVAqQdpERazw2aT1pJG",
+      "role": "user"
     }
   ]
 }

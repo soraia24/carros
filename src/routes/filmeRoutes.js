@@ -1,5 +1,5 @@
 import express from 'express';
-import * as filmeController from '../controllers/filmeController.js';
+import filmeController from '../controllers/filmeController.js';
 import { autenticarToken } from '../middleware/authMiddleware.js';
 import { verificarAdmin } from '../middleware/verificarAdmin.js';
 
