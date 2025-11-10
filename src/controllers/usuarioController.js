@@ -27,41 +27,14 @@ export async function buscar(req, res, next) {
 
 export async function novoUsuario(req, res, next) {
   try {
-    const { login,  nome, email, cel, senha, role } = req.body;
 
-    //  Se tentou criar admin mas não é admin logado
-    if (role === 'admin' && (!req.usuario || req.usuario.role !== 'admin')) {
-      const error = new Error('Apenas administradores podem criar outros administradores');
-      error.status=403;
-      throw error;
-    }
+    const dadosValidados = validarNovoUsuario(req.body, req.usuario);
+
 
     //  Se não há token (visitante) ou se é usuário comum, força role 'user'
     if (!req.usuario || req.usuario.role !== 'admin') {
       req.body.role = 'user';
     }
-
-    // verificar se todos os campos obrigatorios foram preenchidos
-    if (!login || !nome || !email || !cel || !senha) {
-   const error = new Error( 'Preencha todos os campos obrigatórios' );
-   error.status = 400;
-   throw error;
-  }
- //Senha: pelo menos 8 caracteres
-  if(!/^(?=.*[A-Z])(?=.*[a-z])(?=.*\d).{8,}$/.test(senha)){
-      const error = new Error('A senha deve ter no mínimo 8 caracteres, incluindo letras maiúsculas, minúsculas e números');
-      error.status = 400;
-      throw error;  
-    }
-  
-  //Celular: 2 dígitos de DDD + 9 dígitos (total 11 números)
-  const celularLimpo = String(cel).replace(/\D/g, '');
-  if(!/^\d{11}$/.test(celularLimpo)){
-      const error = new Error('O celular deve conter DDD + 9 dígitos (ex: 84999999999)');
-      error.status = 400;
-      throw error;
-    }
-  req.body.cel = celularLimpo;
 
     //  Verifica se já existe login igual
     const existente = await usuarioModel.buscarPorLogin(login);
@@ -73,7 +46,7 @@ export async function novoUsuario(req, res, next) {
     
 
     // Cadastra o novo usuário normalmente
-    const novo = await usuarioModel.cadastrarUsuarios(req.body);
+    const novo = await usuarioModel.cadastrarUsuarios(dadosValidados);
     res.status(201).json({ mensagem: 'Usuário cadastrado com sucesso', novo });
   } catch (err) {
       next(err)  
