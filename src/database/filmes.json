@@ -20,6 +20,33 @@
       "diretor": "robert",
       "ano": 212,
       "sinopse": "Elizabe"
+    },
+    {
+      "id": 4,
+      "titulo": "quarteto",
+      "ano": 2023,
+      "sinopse": "Elizabe"
+    },
+    {
+      "id": 5,
+      "titulo": "quarteto",
+      "ano": 2023,
+      "diretor": "juju",
+      "sinopse": "Elizabe"
+    },
+    {
+      "id": 6,
+      "titulo": "quarteto",
+      "ano": 2023,
+      "diretor": "juju",
+      "sinopse": "Elizabe"
+    },
+    {
+      "id": 7,
+      "titulo": "quarteto",
+      "ano": 2023,
+      "diretor": "juju",
+      "sinopse": "Elizabe"
     }
   ]
 }

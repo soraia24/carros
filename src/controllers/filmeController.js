@@ -30,27 +30,8 @@ static async cadastrar(req, res, next) {
   try {
     const { titulo, diretor, ano, sinopse } = req.body;
 
-    if(!/^\d{4}$/.test(ano)){
-      const err = new Error('Digite um ano válido com exatamente 4 dígitos (exemplo: 2025).')
-      err.statusCode = 400;
-      throw err;
-    }
-
-    // verificar se todos os campos obrigatorios foram preenchidos
-    if (!titulo || !diretor || !ano || !sinopse) {
-        const err = new Error('Preencha todos os campos obrigatórios');
-        err.statusCode = 400;
-        throw err;  
-    }
-
-    // Verifica se já existe filme igual
-    const existente = await filmeModel.buscarPorTitulo(titulo);
-    if (existente) {
-      const err= new Error('Filme já cadastrado');
-      err.statusCode=400;
-      throw err;
-    }
-
+    
+    
     // Cadastra novo filme
     const novo = await filmeModel.cadastrarFilme(req.body);
     res.status(201).json({ mensagem: 'Filme cadastrado com sucesso', novo });
