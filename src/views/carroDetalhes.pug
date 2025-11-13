@@ -1,0 +1,79 @@
+doctype html
+html
+  head
+    meta(charset="UTF-8")
+    title #{carro.marca} #{carro.modelo}
+    style.
+      body {
+        font-family: 'Segoe UI', sans-serif;
+        background: #f4f4f8;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        min-height: 100vh;
+        margin: 0;
+      }
+
+      .container {
+        background: white;
+        border-radius: 12px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        max-width: 600px;
+        padding: 20px;
+        text-align: center;
+      }
+
+      img {
+        width: 100%;
+        border-radius: 10px;
+        margin-bottom: 20px;
+        object-fit: cover;
+      }
+
+      h1 {
+        margin: 0;
+        color: #007bff;
+      }
+
+      p {
+        color: #333;
+        font-size: 1.1rem;
+        margin: 8px 0;
+      }
+
+      .preco {
+        font-weight: bold;
+        color: #28a745;
+        font-size: 1.3rem;
+        margin-top: 15px;
+      }
+
+      a {
+        display: inline-block;
+        margin-top: 20px;
+        text-decoration: none;
+        color: white;
+        background: #007bff;
+        padding: 10px 20px;
+        border-radius: 8px;
+        transition: background 0.2s ease;
+      }
+
+      a:hover {
+        background: #0056b3;
+      }
+
+  body
+    .container
+      if carro.imagem
+        img(src=carro.imagem, alt=`Imagem de ${carro.modelo}`)
+      else
+        img(src="https://cdn-icons-png.flaticon.com/512/661/661272.png", alt="Sem imagem")
+
+      h1 #{carro.marca} #{carro.modelo}
+      p Ano: #{carro.ano}
+      p Cor: #{carro.cor}
+      p.preco R$ #{carro.preco.toLocaleString('pt-BR')}
+
+      a(href="/carros/view") ← Voltar ao catálogo
