@@ -1,12 +1,12 @@
-import * as CarModel from '../models/CarModel.js';
+import * as carRepository from '../repositorios/carRepository.js';
 
 // garante inicialização do DB
-await CarModel.initDB();
+await carRepository.initDB();
 
 class CarController {
 static async listar(req, res, next) {
   try {
-    const cars = await CarModel.listarCar();
+    const cars = await carRepository.listarCar();
     res.status(200).json(cars);
   } catch (err) {
     next(err); 
@@ -15,7 +15,7 @@ static async listar(req, res, next) {
 
 static async buscar(req, res, next) {
   try {
-    const car = await CarModel.buscarCar(req.params.id);
+    const car = await carRepository.buscarCar(req.params.id);
     if (!car) {
       const err = new Error('Carro não encontrado');
       err.statusCode = 404;
@@ -30,7 +30,7 @@ static async cadastrar(req, res, next) {
   try {
     
     // Cadastra novo carro
-    const NovoCar = await CarModel.cadastrarCar(req.body);
+    const NovoCar = await carRepository.cadastrarCar(req.body);
     res.status(201).json({ mensagem: 'Carro cadastrado com sucesso', NovoCar });
   } catch (error) {
     next(error)  }
@@ -44,7 +44,7 @@ static async atualizar(req, res, next) {
     // Verifica se é uma atualização apenas da imagem
     const apenasImagem = (campos.length === 1 && campos[0] === "imagem");
 
-    const atualizado = await CarModel.atualizarCar(req.params.id, req.body);
+    const atualizado = await carRepository.atualizarCar(req.params.id, req.body);
 
     if (!atualizado) {
       const err = new Error("Carro não encontrado");
@@ -66,7 +66,7 @@ static async atualizar(req, res, next) {
 
 static async deletar(req, res, next) {
   try {
-    const ok = await CarModel.deletarCar(req.params.id);
+    const ok = await carRepository.deletarCar(req.params.id);
 
     if (!ok){
       const err= new Error( 'Carro não encontrado' );
@@ -80,7 +80,7 @@ static async deletar(req, res, next) {
 }
 static async exibirPagina(req, res, next) {
   try {
-    const cars = await CarModel.listarCar();
+    const cars = await carRepository.listarCar();
     res.render("carros", { carros: cars });
   } catch (err) {
     next(err);
@@ -90,7 +90,7 @@ static async exibirPagina(req, res, next) {
 static async verDetalhes(req, res, next) {
   try {
     const id = req.params.id;
-    const carro = await CarModel.buscarCar(id);
+    const carro = await carRepository.buscarCar(id);
 
     if (!carro) {
       const err = new Error("Carro não encontrado");
