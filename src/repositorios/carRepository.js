@@ -1,63 +1,69 @@
-import { ObjectId } from "mongodb"; 
-import {connectToDataBase} from "../database/MongoConnect.js";
- 
-export async function initDB() { 
-  const db = await connectToDataBase();
+import { ObjectId } from "mongodb";
+import { getCarCollection } from "../models/CarModel.js";
+
+// Inicializar banco
+export async function initDB() {
+  await getCarCollection();
   console.log("Banco de dados 'Catalogo_Carros' pronto para uso.");
 }
 
-
-// Listar Carros
+// Listar carros
 export async function listarCar() {
-  const db =  await connectToDataBase();
-  const cars = await db.collection("Carros").find({}).toArray();
-  return cars
+  const collection = await getCarCollection();
+  return await collection.find({}).toArray();
 }
 
-// Cadastrar Carro
+// Cadastrar carro
 export async function cadastrarCar(car) {
-  const db =  await connectToDataBase();
-  const result = await db.collection("Carros").insertOne(car);
+  const collection = await getCarCollection();
+  const result = await collection.insertOne(car);
   return { id: result.insertedId, ...car };
 }
 
-// Buscar por id
+// Buscar por ID
 export async function buscarCar(id) {
-  const db =  await connectToDataBase();
-  const car = await db.collection("Carros").findOne({ _id: new ObjectId(id) });
-  return car;
+  const collection = await getCarCollection();
+  return await collection.findOne({ _id: new ObjectId(id) });
 }
 
 // Atualizar carro
 export async function atualizarCar(id, dados) {
-  const db = await connectToDataBase();
-  
-  // Usa updateOne em vez de findOneAndUpdate pra evitar retorno nulo
-  const result = await db.collection("Carros").updateOne(
+  const collection = await getCarCollection();
+
+  const result = await collection.updateOne(
     { _id: new ObjectId(id) },
     { $set: dados }
   );
 
   if (result.matchedCount === 0) {
-    // Nenhum carro encontrado com esse ID
     return null;
   }
 
-  // Retorna o documento atualizado manualmente
-  const carroAtualizado = await db.collection("Carros").findOne({ _id: new ObjectId(id) });
-  return carroAtualizado;
+  return await collection.findOne({ _id: new ObjectId(id) });
 }
 
-// Deletar filme
+// Deletar carro
 export async function deletarCar(id) {
-  const db =  await connectToDataBase();
-  const result = await db.collection("Carros").deleteOne({ _id: new ObjectId(id) });
+  const collection = await getCarCollection();
+  const result = await collection.deleteOne({ _id: new ObjectId(id) });
   return result.deletedCount > 0;
 }
 
-//buscar por modelo  
+// Buscar por marca
 export async function buscarPorMarca(marca) {
-  const db = await connectToDataBase();
-  const cars = await db.collection("Carros").find({ marca });
-  return cars;
+  const collection = await getCarCollection();
+  return await collection.find({ marca }).toArray();
+}
+
+// 🔎 Buscar por chassi
+export async function buscarPorChassi(chassi) {
+  const collection = await getCarCollection();
+  return await collection.findOne({ chassi });
+}
+
+export async function buscarCarrosIguais({ marca, modelo, ano, cor, preco }) {
+  const collection = await getCarCollection();
+  return await collection.find({
+    marca, modelo, ano, cor, preco
+  }).toArray();
 }

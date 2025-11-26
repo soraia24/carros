@@ -1,34 +1,40 @@
-import * as CarModel from '../models/CarModel.js';
-
-export default async function validarCar(req, res, next){
+export default function validarCar(req, res, next) {
   try {
-    const { marca, modelo, ano, cor, preco } = req.body;
-    if (req.method === 'PUT') {
+    const { marca, modelo, ano, cor, preco, chassi } = req.body;
+
+    // Para UPDATE (PUT), não obrigamos todos os campos
+    if (req.method === "PUT") {
       return next();
     }
 
-    if(!marca || !modelo || !ano || !cor || !preco){
-        const err = new Error('Preencha todos os campos obrigatórios: marca, modelo, ano, cor, preco.');
+    // Para POST → tudo obrigatório
+    const camposObrigatorios = { marca, modelo, ano, cor, preco, chassi };
+
+    for (const [campo, valor] of Object.entries(camposObrigatorios)) {
+      if (!valor) {
+        const err = new Error(`O campo '${campo}' é obrigatório.`);
         err.statusCode = 400;
         throw err;
+      }
     }
 
-    if(!/^\d{4}$/.test(ano)){
-      const err = new Error('Digite um ano válido com exatamente 4 dígitos (exemplo: 2025).')
+    // Ano com 4 dígitos
+    if (!/^\d{4}$/.test(String(ano))) {
+      const err = new Error("Digite um ano válido com exatamente 4 dígitos (exemplo: 2024).");
       err.statusCode = 400;
       throw err;
     }
 
-    // Verifica se o carro já está cadastrado
-    const existente = await CarModel.buscarPorMarca(marca);
-     if (existente) {
-     const err= new Error('Carro já cadastrado');
-    err.statusCode = 400;
-     throw err; //logar na parte do service
+    // Preço deve ser número positivo
+    if (typeof preco !== "number" || preco <= 0) {
+      const err = new Error("O campo 'preco' deve ser um número maior que zero.");
+      err.statusCode = 400;
+      throw err;
     }
 
     next();
-} catch (error) {
+
+  } catch (error) {
     next(error);
-    }
+  }
 }

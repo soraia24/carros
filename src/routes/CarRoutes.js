@@ -9,7 +9,7 @@ const router = express.Router();
 // rota para exibir página com lista de carros
 router.get('/views', CarController.exibirPagina);
 
-router.get('/', autenticarToken, CarController.listar);
+router.get('/', CarController.listar);
 router.get('/:id', autenticarToken, CarController.buscar);
 router.post('/cadastrar', validarCar, autenticarToken, verificarAdmin, CarController.cadastrar);
 router.put('/:id',autenticarToken, validarCar, verificarAdmin, CarController.atualizar);

@@ -1,111 +1,96 @@
-import * as carRepository from '../repositorios/carRepository.js';
-
-// garante inicialização do DB
-await carRepository.initDB();
+import CarService from "../services/carService.js";
+import { validarCreateCarDTO } from "../dtos/createCar.dto.js";
+import { validarUpdateCarDTO } from "../dtos/updateCar.dto.js";
 
 class CarController {
-static async listar(req, res, next) {
-  try {
-    const cars = await carRepository.listarCar();
-    res.status(200).json(cars);
-  } catch (err) {
-    next(err); 
-   }
-}
 
-static async buscar(req, res, next) {
-  try {
-    const car = await carRepository.buscarCar(req.params.id);
-    if (!car) {
-      const err = new Error('Carro não encontrado');
-      err.statusCode = 404;
-      throw err;
+  static async listar(req, res, next) {
+    try {
+      const cars = await CarService.listar();
+      res.status(200).json(cars);
+    } catch (err) {
+      next(err);
     }
-    res.status(200).json(car);
-  } catch (err) {
-    next(err);  }
-}
-
-static async cadastrar(req, res, next) {
-  try {
-    
-    // Cadastra novo carro
-    const NovoCar = await carRepository.cadastrarCar(req.body);
-    res.status(201).json({ mensagem: 'Carro cadastrado com sucesso', NovoCar });
-  } catch (error) {
-    next(error)  }
-}
-
-
-static async atualizar(req, res, next) {
-  try {
-    const campos = Object.keys(req.body);
-
-    // Verifica se é uma atualização apenas da imagem
-    const apenasImagem = (campos.length === 1 && campos[0] === "imagem");
-
-    const atualizado = await carRepository.atualizarCar(req.params.id, req.body);
-
-    if (!atualizado) {
-      const err = new Error("Carro não encontrado");
-      err.statusCode = 404;
-      throw err;
-    }
-
-    // Mensagem personalizada
-    if (apenasImagem) {
-      return res.status(200).json({ mensagem: "Imagem salva com sucesso ✅", carro: atualizado });
-    }
-
-    res.status(200).json({ mensagem: "Carro atualizado com sucesso 🚗", carro: atualizado });
-
-  } catch (err) {
-    next(err);
   }
-}
 
-static async deletar(req, res, next) {
-  try {
-    const ok = await carRepository.deletarCar(req.params.id);
-
-    if (!ok){
-      const err= new Error( 'Carro não encontrado' );
-      err.statusCode = 404;
-      throw err;
+  static async buscar(req, res, next) {
+    try {
+      const car = await CarService.buscar(req.params.id);
+      res.status(200).json(car);
+    } catch (err) {
+      next(err);
     }
-    res.status(200).json({ mensagem: 'Carro removido com sucesso' });
-  } catch (err) {
-        next(err);  
-        } 
-}
-static async exibirPagina(req, res, next) {
-  try {
-    const cars = await carRepository.listarCar();
-    res.render("carros", { carros: cars });
-  } catch (err) {
-    next(err);
   }
-}
 
-static async verDetalhes(req, res, next) {
-  try {
-    const id = req.params.id;
-    const carro = await carRepository.buscarCar(id);
+  static async cadastrar(req, res, next) {
+    try {
+      //  Validação DTO
+      const erros = validarCreateCarDTO(req.body);
+      if (erros.length > 0) {
+        return res.status(400).json({ erros });
+      }
 
-    if (!carro) {
-      const err = new Error("Carro não encontrado");
-      err.statusCode = 404;
-      throw err;
+      const NovoCar = await CarService.cadastrar(req.body);
+      res.status(201).json({ mensagem: "Carro cadastrado com sucesso", NovoCar });
+
+    } catch (error) {
+      next(error);
     }
-
-    res.render("carroDetalhes", { carro });
-  } catch (err) {
-    next(err);
   }
-}
 
+  static async atualizar(req, res, next) {
+    try {
+      //  Validação DTO
+      const erros = validarUpdateCarDTO(req.body);
+      if (erros.length > 0) {
+        return res.status(400).json({ erros });
+      }
+
+      const { atualizado, apenasImagem } = await CarService.atualizar(req.params.id, req.body);
+
+      if (apenasImagem) {
+        return res.status(200).json({
+          mensagem: "Imagem salva com sucesso ✅",
+          carro: atualizado
+        });
+      }
+
+      res.status(200).json({
+        mensagem: "Carro atualizado com sucesso 🚗",
+        carro: atualizado
+      });
+
+    } catch (err) {
+      next(err);
+    }
+  }
+
+  static async deletar(req, res, next) {
+    try {
+      await CarService.deletar(req.params.id);
+      res.status(200).json({ mensagem: "Carro removido com sucesso" });
+    } catch (err) {
+      next(err);
+    }
+  }
+
+  static async exibirPagina(req, res, next) {
+    try {
+      const cars = await CarService.listarPagina();
+      res.render("carros", { carros: cars });
+    } catch (err) {
+      next(err);
+    }
+  }
+
+  static async verDetalhes(req, res, next) {
+    try {
+      const carro = await CarService.detalhes(req.params.id);
+      res.render("carroDetalhes", { carro });
+    } catch (err) {
+      next(err);
+    }
+  }
 }
 
 export default CarController;
-
- 
