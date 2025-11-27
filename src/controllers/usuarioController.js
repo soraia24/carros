@@ -1,4 +1,4 @@
-import * as usuarioModel from "../models/usuarioModel.js"
+import * as usuarioModel from "../services/usuarioService.js"
 import jwt from "jsonwebtoken";
 import bcrypt from "bcryptjs"
 
