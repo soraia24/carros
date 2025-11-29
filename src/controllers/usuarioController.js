@@ -26,7 +26,6 @@ export async function buscar(req, res, next) {
   }
 }
 
-// ---------------------- CADASTRAR ----------------------
 export async function novoUsuario(req, res, next) {
   try {
     // 1) Validar DTO
@@ -35,12 +34,12 @@ export async function novoUsuario(req, res, next) {
       return res.status(400).json({ erros });
     }
 
-    // Força role "user" caso não seja admin
+    // Se NÃO for admin, define role como 'user'
     if (!req.usuario || req.usuario.role !== "admin") {
       req.body.role = "user";
     }
 
-    // 2) Criar usuário (service já valida login duplicado)
+    // Criar (service já verifica duplicidade)
     const novo = await UsuarioService.cadastrar(req.body);
 
     res.status(201).json({
@@ -53,7 +52,8 @@ export async function novoUsuario(req, res, next) {
   }
 }
 
-// ---------------------- LOGIN ----------------------
+
+//  LOGIN 
 export async function login(req, res, next) {
   try {
     const erros = validarLoginDTO(req.body);

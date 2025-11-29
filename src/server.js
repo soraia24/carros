@@ -15,7 +15,6 @@ app.set("views", "./src/views");
 
 app.use(erros);
 
-
 app.listen(3001, () => {
   console.log("Servidor rodando na porta 3000 🚀");
 });

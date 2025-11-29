@@ -15,7 +15,15 @@ class UsuarioService {
 
   // Cadastrar
   static async cadastrar(dados) {
-    // Hash de senha
+    const existente = await UsuarioRepository.buscarPorLogin(dados.login);
+
+    if (existente) {
+      const err = new Error("Usuário já cadastrado");
+      err.status = 400;
+      throw err;
+    }
+
+    // Criptografa a senha
     const senhaHash = await bcrypt.hash(dados.senha, 10);
 
     const novoUsuario = {
@@ -44,9 +52,29 @@ class UsuarioService {
     return await UsuarioRepository.deletarUsuario(id);
   }
 
-  // Login → apenas busca usuário
-  static async login(login) {
-    return await UsuarioRepository.buscarPorLogin(login);
+  // Login
+  static async login(login, senha) {
+    const usuario = await UsuarioRepository.buscarPorLogin(login);
+    console.log("Usuário encontrado:", usuario);
+    console.log("Senha no banco:", usuario.senha);
+    console.log("Senha recebida:", senha);
+    console.log("login recebida:", login);
+
+    if (!usuario) {
+      const err = new Error("Login inválido");
+      err.status = 400;
+      throw err;
+    }
+
+    const senhaValida = await bcrypt.compare(senha, usuario.senha);
+
+    if (!senhaValida) {
+      const err = new Error("Senha incorreta");
+      err.status = 400;
+      throw err;
+    }
+
+    return usuario; // o controller cria o token
   }
 }
 

@@ -38,7 +38,7 @@ export function validarNovoUsuario(req, res, next) {
 
     next();
   } catch (error) {
-    next(error); // Importante para o middleware de erro capturar corretamente
+    next(error); 
   }
 }
 
