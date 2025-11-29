@@ -1,11 +1,12 @@
-import UsuarioService from "../services/usuarioService.js"
-import { validarCreateUserDTO, } from "../dtos/user.dto.js";
+import UsuarioService from "../services/usuarioService.js";
+import {
+  validarCreateUserDTO,
+} from "../dtos/user.dto.js";
 import { validarLoginDTO } from "../dtos/login.dto.js";
 
 import jwt from "jsonwebtoken";
-import bcrypt from "bcryptjs";
 
-//  LISTAR TODOS 
+// ---------------------- LISTAR ----------------------
 export async function todosUsuarios(req, res, next) {
   try {
     const usuarios = await UsuarioService.listar();
@@ -15,44 +16,31 @@ export async function todosUsuarios(req, res, next) {
   }
 }
 
-//  BUSCAR POR ID 
+// ---------------------- BUSCAR ----------------------
 export async function buscar(req, res, next) {
   try {
     const usuario = await UsuarioService.buscar(req.params.id);
-
-    if (!usuario) {
-      return res.status(404).json({ erro: "Usuário não encontrado" });
-    }
-
     res.status(200).json(usuario);
   } catch (err) {
     next(err);
   }
 }
 
-//  CADASTRAR USUÁRIO 
+// ---------------------- CADASTRAR ----------------------
 export async function novoUsuario(req, res, next) {
   try {
-    // 1) VALIDAR DTO 
+    // 1) Validar DTO
     const erros = validarCreateUserDTO(req.body);
     if (erros.length > 0) {
       return res.status(400).json({ erros });
     }
 
-    const { login } = req.body;
-
-    // SE NÃO FOR ADMIN, FORÇA ROLE USER
+    // Força role "user" caso não seja admin
     if (!req.usuario || req.usuario.role !== "admin") {
       req.body.role = "user";
     }
 
-    // LOGIN DUPLICADO 
-    const existente = await UsuarioService.login(login);
-    if (existente) {
-      return res.status(400).json({ erro: "Login já cadastrado" });
-    }
-
-    //  CRIAR 
+    // 2) Criar usuário (service já valida login duplicado)
     const novo = await UsuarioService.cadastrar(req.body);
 
     res.status(201).json({
@@ -65,10 +53,9 @@ export async function novoUsuario(req, res, next) {
   }
 }
 
-//  LOGIN 
+// ---------------------- LOGIN ----------------------
 export async function login(req, res, next) {
   try {
-    //  VALIDAR DTO 
     const erros = validarLoginDTO(req.body);
     if (erros.length > 0) {
       return res.status(400).json({ erros });
@@ -76,19 +63,11 @@ export async function login(req, res, next) {
 
     const { login, senha } = req.body;
 
-    const usuario = await UsuarioService.login(login);
-    if (!usuario) {
-      return res.status(401).json({ erro: "Usuário ou senha inválidos" });
-    }
-
-    const senhaValida = await bcrypt.compare(senha, usuario.senha);
-    if (!senhaValida) {
-      return res.status(401).json({ erro: "Usuário ou senha inválidos" });
-    }
+    const usuario = await UsuarioService.login(login, senha);
 
     const token = jwt.sign(
       {
-        id: usuario.id,
+        id: usuario._id,     // <-- CORRIGIDO
         login: usuario.login,
         role: usuario.role,
       },
@@ -110,11 +89,6 @@ export async function login(req, res, next) {
 export async function atualizar(req, res, next) {
   try {
     const atualizado = await UsuarioService.atualizar(req.params.id, req.body);
-
-    if (!atualizado) {
-      return res.status(404).json({ erro: "Usuário não encontrado" });
-    }
-
     res.status(200).json(atualizado);
   } catch (err) {
     next(err);
@@ -124,11 +98,7 @@ export async function atualizar(req, res, next) {
 // ---------------------- DELETAR ----------------------
 export async function deletar(req, res, next) {
   try {
-    const excluido = await UsuarioService.deletar(req.params.id);
-
-    if (!excluido) {
-      return res.status(404).json({ erro: "Usuário não encontrado" });
-    }
+    await UsuarioService.deletar(req.params.id);
 
     res.status(200).json({ mensagem: "Usuário removido com sucesso" });
   } catch (err) {

@@ -9,6 +9,8 @@ export async function listarUsuarios() {
 
 // Buscar por ID
 export async function buscarUsuario(id) {
+  if (!ObjectId.isValid(id)) return null;
+
   const col = await getUserCollection();
   return col.findOne({ _id: new ObjectId(id) });
 }
@@ -16,12 +18,17 @@ export async function buscarUsuario(id) {
 // Cadastrar
 export async function cadastrarUsuario(usuario) {
   const col = await getUserCollection();
+
   const result = await col.insertOne(usuario);
-  return { id: result.insertedId, ...usuario };
+
+  // Retorna documento completo, mais seguro
+  return await col.findOne({ _id: result.insertedId });
 }
 
 // Atualizar
 export async function atualizarUsuario(id, dados) {
+  if (!ObjectId.isValid(id)) return null;
+
   const col = await getUserCollection();
 
   await col.updateOne(
@@ -29,11 +36,13 @@ export async function atualizarUsuario(id, dados) {
     { $set: dados }
   );
 
-  return col.findOne({ _id: new ObjectId(id) });
+  return await col.findOne({ _id: new ObjectId(id) });
 }
 
 // Deletar
 export async function deletarUsuario(id) {
+  if (!ObjectId.isValid(id)) return false;
+
   const col = await getUserCollection();
   const result = await col.deleteOne({ _id: new ObjectId(id) });
   return result.deletedCount > 0;

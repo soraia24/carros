@@ -1,15 +1,22 @@
 import "dotenv/config";
 import { MongoClient } from "mongodb";
+
 const uri = process.env.MONGODB_URI;
 const client = new MongoClient(uri);
 
-export async function connectToDataBase() {
-  try {
-    await client.connect();
-    console.log("✅ Conectado com sucesso ao MongoDB Atlas");
+let connected = false;
 
-    const database = client.db("Catalogo_Carros");
-    return database; // retorna o objeto do banco pra ser usado nos Models
+export async function connectToDataBase(dbName = "Catalogo_Carros") {
+  try {
+    if (!connected) {
+      await client.connect();
+      connected = true;
+      console.log("✅ Conectado com sucesso ao MongoDB Atlas");
+    }
+
+    const database = client.db(dbName);
+    return database;
+
   } catch (error) {
     console.error("❌ Erro ao conectar ao MongoDB Atlas:", error);
     throw error;
