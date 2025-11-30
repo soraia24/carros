@@ -28,7 +28,7 @@ class CarService {
     const carroComMesmoChassi = await carRepository.buscarPorChassi(chassi);
 
     if (carroComMesmoChassi) {
-      const err = new Error("Já existe um carro cadastrado com este chassi.");
+      const err = new Error("Carro já cadastrado.");
       err.statusCode = 400;
       throw err;
     }

@@ -10,7 +10,7 @@ const router = express.Router();
 router.get('/views', CarController.exibirPagina);
 
 router.get('/', CarController.listar);
-router.get('/:id', autenticarToken, CarController.buscar);
+router.get('/:id', autenticarToken, verificarAdmin, CarController.buscar);
 router.post('/cadastrar', validarCar, autenticarToken, verificarAdmin, CarController.cadastrar);
 router.put('/:id',autenticarToken, validarCar, verificarAdmin, CarController.atualizar);
 router.delete('/:id',autenticarToken, verificarAdmin, CarController.deletar);
