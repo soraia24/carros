@@ -8,11 +8,11 @@ import {validarNovoUsuario, validarLogin} from "../validators/usuarioValidator.j
 
 const router = express.Router();
 
-router.get("/", autenticarToken, verificarAdmin,  usuariosController.todosUsuarios);
-router.get("/:id", autenticarToken, verificarAdmin, usuariosController.buscar);
-router.post('/cadastrar', autenticarTokenOptional, validarNovoUsuario, verificarAdmin, usuariosController.novoUsuario);
-router.post('/login', validarLogin, usuariosController.login);
-router.put('/:id', autenticarToken, verificarProprioUsuario, validarNovoUsuario, usuariosController.atualizar);
+router.get("/",autenticarToken, verificarAdmin,  usuariosController.todosUsuarios);
+router.get("/:id",autenticarToken, verificarAdmin, usuariosController.buscar);
+router.post('/cadastrar', autenticarTokenOptional, validarNovoUsuario, usuariosController.novoUsuario);
+router.post('/login',validarLogin, usuariosController.login);
+router.put('/:id', autenticarToken, verificarProprioUsuario, usuariosController.atualizar);
 router.delete('/:id', autenticarToken, verificarProprioUsuario, usuariosController.deletar);
 
 export default router;

@@ -1,13 +1,6 @@
 export function validarNovoUsuario(req, res, next) {
   try {
-    const { login, nome, email, cel, senha, role } = req.body;
-
-    // Verificar permissão para criar admin
-    if (role === 'admin' && (!req.usuario || req.usuario.role !== 'admin')) {
-      const error = new Error('Apenas administradores podem criar outros administradores');
-      error.status = 403;
-      throw error;
-    }
+    const { login, nome, email, cel, senha } = req.body;
 
     // Verificar campos obrigatórios
     if (!login || !nome || !email || !cel || !senha) {

@@ -35,8 +35,8 @@ export async function novoUsuario(req, res, next) {
     }
 
     // Se NÃO for admin, define role como 'user'
-    if (!req.usuario || req.usuario.role !== "admin") {
-      req.body.role = "user";
+   if (!req.usuario || req.usuario.role !== "admin") {
+     req.body.role = "user";
     }
 
     // Criar (service já verifica duplicidade)

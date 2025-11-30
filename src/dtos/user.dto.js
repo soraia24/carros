@@ -14,10 +14,6 @@ export function validarCreateUserDTO(data) {
     erros.push("O campo 'email' é obrigatório e deve ser uma string.");
   }
 
-  if (!data.cel || typeof data.cel !== "string") {
-    erros.push("O campo 'cel' é obrigatório e deve ser uma string.");
-  }
-
   if (!data.senha || typeof data.senha !== "string") {
     erros.push("O campo 'senha' é obrigatório e deve ser uma string.");
   }

@@ -55,10 +55,6 @@ class UsuarioService {
   // Login
   static async login(login, senha) {
     const usuario = await UsuarioRepository.buscarPorLogin(login);
-    console.log("Usuário encontrado:", usuario);
-    console.log("Senha no banco:", usuario.senha);
-    console.log("Senha recebida:", senha);
-    console.log("login recebida:", login);
 
     if (!usuario) {
       const err = new Error("Login inválido");
