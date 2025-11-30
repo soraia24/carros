@@ -1,17 +1,15 @@
-# Api Filmes
-Este projeto marca o início da minha jornada no desenvolvimento Back-End.
-Trata-se da minha primeira API, criada para o gerenciamento de filmes, com o objetivo de oferecer uma forma rápida e prática de conhecer informações essenciais sobre cada título — ajudando o usuário a decidir se o filme vale a pena assistir.
+# Api de Loja de Carros
+Este projeto marca o início da nossa jornada no desenvolvimento Back-End.
+Trata-se da nossa primeira API, criada para o gerenciamento de carros, com o objetivo de oferecer uma forma rápida e prática de conhecer informações essenciais sobre cada carro e também compra-los — ajudando o usuário a decidir qual carro comprar e comprando no conforto do seu lar.
 
 A API armazena e disponibiliza dados como:
 
-- Título
-- Diretor
-- Ano de lançamento
-- Sinopse
-
-#### Login Administrador 
-- login: admin 
-- senha: Backend2
+- Marca
+- Modelo
+- Ano
+- preço
+- chassi
+- cor
 
 # Tecnologias Utilizadas
 - javaScript 
@@ -19,7 +17,7 @@ A API armazena e disponibiliza dados como:
 - Express
 - bcrypt
 - jsonwebtoken
-- lowdb (banco de dados JSON)
+- Mongo Atlas
 
 # Endpoints Usuarios 
 
@@ -31,23 +29,26 @@ A API armazena e disponibiliza dados como:
 
 # Endpoints Filmes 
 
-- POST	Filmes/cadastrar	Cadastra novo Filme
-- GET	Filmes	Lista todos os Filmes 
-- GET	Filmes/id	Lista Filmes especifico
-- PUT   Filmes/id Alterar Parcial  ou Total 
+- POST	carros/cadastrar	Cadastra novo Filme
+- GET	carros	Lista todos os Filmes 
+- GET	carros/id	Lista Filmes especifico
+- PUT   carros/id Alterar Parcial  ou Total 
 
 
 ## Funcionalidades e Permissões
 
 ###  Sem Login
-- Pode **apenas cadastrar um novo usuário comum**.
+- Pode **cadastrar um novo usuário comum**.
+- Consulta todos os Carros.
 
 ---
 
 ### Usuário Comum
 **Permissões:**
-- Pesquisar **todos os filmes**.
-- Pesquisar **filmes por ID**.
+- Pesquisar **todos os Carros**.
+- Pesquisar **Carros por ID**.
+- Comprar Carros
+- Consulta lista de Carros Comprados
 - **Alterar** seu próprio cadastro.
 - **Excluir** sua própria conta.
 
@@ -57,11 +58,11 @@ A API armazena e disponibiliza dados como:
 **Permissões avançadas:**
 
 #### Gerenciamento de Filmes
--  **Cadastrar** novos filmes.
--  **Alterar** informações de filmes.
--  **Excluir** filmes.
--  **Pesquisar todos os filmes**.
--  **Pesquisar filme por ID**.
+-  **Cadastrar** novos Carros.
+-  **Alterar** informações dos Carros.
+-  **Excluir** Carros.
+-  **Pesquisar todos os Carros**.
+-  **Pesquisar Carro por ID**.
 
 #### Gerenciamento de Usuários
 - **Cadastrar** usuários comuns e administradores.
@@ -72,5 +73,7 @@ A API armazena e disponibiliza dados como:
 
 
 # Autor e contato
-- Soraia Araujo 
+- Soraia Araujo
+- Artur Gabriel
 - github: https://github.com/soraia24 
+
