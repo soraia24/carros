@@ -75,5 +75,8 @@ A API armazena e disponibiliza dados como:
 # Autor e contato
 - Soraia Araujo
 - Artur Gabriel
-- github: https://github.com/soraia24 
+- github:
+  - https://github.com/soraia24
+  - https://github.com/Arturgr21
+
 
